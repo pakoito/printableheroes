@@ -1,0 +1,16 @@
+{
+  "name": "printableheroes",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "download": "^8.0.0",
+    "got": "^11.8.2",
+    "minimist": "^1.2.5",
+    "p-limit": "^3.1.0"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}

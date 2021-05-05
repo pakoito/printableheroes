@@ -1,13 +1,10 @@
 import minimist from 'minimist';
 import got from 'got';
-import { writeFile } from 'fs';
-import { promisify } from 'util';
 import download from 'download';
 import pLimit from 'p-limit';
 import assert from 'assert/strict';
 
 const limit = pLimit(5);
-const writeFileAsync = promisify(writeFile);
 
 async function downloadId(secret, maxTier, folder, id) {
   const result = await got.get(`https://api.printableheroes.com/api/minifiles/get?miniId=${id}`, {

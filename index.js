@@ -4,9 +4,7 @@ import download from 'download';
 import pLimit from 'p-limit';
 import assert from 'assert/strict';
 
-const limit = pLimit(5);
-
-async function downloadId(secret, maxTier, folder, id) {
+async function downloadId(limit, secret, maxTier, folder, id) {
   const result = await got.get(`https://api.printableheroes.com/api/minifiles/get?miniId=${id}`, {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
@@ -35,7 +33,7 @@ async function downloadId(secret, maxTier, folder, id) {
 }
 
 async function main() {
-  const { tier, folder, secret, from_id } = minimist(process.argv.slice(2));
+  const { tier, folder, secret, from_id, parallel } = minimist(process.argv.slice(2));
   assert(folder, `Required arg: folder`);
   assert(secret, `Required arg: secret. Look for the Authorization header in a download request`);
   const maxTier = tier ?? 10;
@@ -45,8 +43,9 @@ async function main() {
       'Content-Type': 'application/json; charset=utf-8',
     },
   });
+  const limit = pLimit(parallel ?? 5);
   const ids = JSON.parse(result.body).filter(({ Id }) => Id >= minId).map(({ Name, Id }) => [Name, Id]).sort((a, b) => a[1] - b[1]);
-  const errors = await Promise.all(ids.map(([name, id]) => downloadId(secret, maxTier, `${folder}/${name}`, id)));
+  const errors = await Promise.all(ids.map(([name, id]) => downloadId(limit, secret, maxTier, `${folder}/${name}`, id)));
   console.log(`Failed downloads: ${errors.flatMap((a) => a)}`);
 }
 

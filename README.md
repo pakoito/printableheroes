@@ -4,4 +4,4 @@
 
 Find your secret in the Authorization header on any printableheroes website download request.
 
-Find the asset ids on the urls such as https://printableheroes.com/minis/<id>
+Find the asset ids on the urls such as `https://printableheroes.com/minis/<id>`

@@ -44,7 +44,7 @@ async function main() {
     },
   });
   const limit = pLimit(parallel ?? 5);
-  const ids = JSON.parse(result.body).filter(({ Id }) => Id >= minId).map(({ Name, Id }) => [Name.trim(), Id.trim()]).sort((a, b) => a[1] - b[1]);
+  const ids = JSON.parse(result.body).filter(({ Id }) => Id >= minId).map(({ Name, Id }) => [Name.trim(), Id.toString().trim()]).sort((a, b) => a[1] - b[1]);
   console.log(`Downloading [${ids.length}] heroes`);
   const errors = await Promise.all(ids.map(([name, id]) => downloadId(limit, secret, maxTier, `${folder}/${name} (${id})`, id)));
   console.log(`Failed downloads: ${JSON.stringify(errors.flatMap((a) => a))}`);

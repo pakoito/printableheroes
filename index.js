@@ -20,11 +20,16 @@ async function downloadId(limit, secret, maxTier, folder, id) {
             await download(
               `https://api.printableheroes.com/files?mini_id=${id}&tier=${tier}&file_name=${FileName}`,
               folder,
-              { headers: { Authorization: secret } }
+              {
+                headers: {
+                  Authorization: secret,
+                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0'
+                }
+              }
             );
             return [];
           } catch (e) {
-            return [{ id, tier, FileName }];
+            return [{ id, tier, file: FileName, error: JSON.stringify(e) }];
           }
         })
       )
@@ -47,7 +52,8 @@ async function main() {
   const ids = JSON.parse(result.body).filter(({ Id }) => Id >= minId).map(({ Name, Id }) => [Name.trim(), Id.toString().trim()]).sort((a, b) => a[1] - b[1]);
   console.log(ids.length === 0 ? `No new heroes since {${minId}}` : `Downloading {${ids.length}} heroes: ${JSON.stringify(ids.map(([name, _id]) => name), undefined, 2)}`);
   const errors = await Promise.all(ids.map(([name, id]) => downloadId(limit, secret, maxTier, `${folder}/${name} (${id})`, id)));
-  ids.length === 0 ? void 0 : console.log(`Failed downloads: ${JSON.stringify(errors.flatMap((a) => a), undefined, 2)}`);
+  const errors_flat = errors.flatMap((a) => a);
+  ids.length === 0 || errors_flat.length == 0 ? void 0 : console.log(`Failed {${errors_flat.length}} downloads: ${JSON.stringify(errors_flat, undefined, 2)}`);
 }
 
 main();

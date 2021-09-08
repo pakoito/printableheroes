@@ -50,7 +50,7 @@ async function main() {
   });
   const limit = pLimit(parallel ?? 5);
   const ids = JSON.parse(result.body).filter(({ Id }) => Id >= minId).map(({ Name, Id }) => [Name.trim(), Id.toString().trim()]).sort((a, b) => a[1] - b[1]);
-  console.log(ids.length === 0 ? `No new heroes since {${minId}}` : `Downloading {${ids.length}} heroes: ${JSON.stringify(ids.map(([name, _id]) => name), undefined, 2)}`);
+  console.log(ids.length === 0 ? `No new heroes since {${minId}}` : `Downloading {${ids.length}} heroes: ${JSON.stringify(ids.map(([name, id]) => `${name} [${id}]`), undefined, 2)}`);
   const errors = await Promise.all(ids.map(([name, id]) => downloadId(limit, secret, maxTier, `${folder}/${name} (${id})`, id)));
   const errors_flat = errors.flatMap((a) => a);
   ids.length === 0 || errors_flat.length == 0 ? void 0 : console.log(`Failed {${errors_flat.length}} downloads: ${JSON.stringify(errors_flat, undefined, 2)}`);

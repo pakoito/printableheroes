@@ -2,8 +2,6 @@
 
 Printable Heroes Downloader is a Node.js tool for batch-downloading printable hero miniatures from printableheroes.com. It automates fetching assets by their IDs, supports filtering by tier, and allows parallel downloads for efficiency. The script requires your personal Authorization header to access files and can be integrated into automated workflows to keep your collection up to date.
 
-> **Note:** This project is a fork of [pakoito/printableheroes](https://github.com/pakoito/printableheroes.git). It builds upon the original functionality with additional features and improvements for enhanced automation and usability.
-
 ### Usage
 
 `yarn start --folder <output folder> --secret <Authorization header>`
